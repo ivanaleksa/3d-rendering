@@ -7,8 +7,11 @@
 class FileReader
 {
 private:
-    std::vector<float> verteces;
-    std::vector<std::vector<int>> polygons;
+    std::vector<std::vector<float>> verteces, vertices_normal;
+    std::vector<std::vector<int>> polygons, polygons_normal;
+
+    std::vector<float> extractNumbers(const std::string&, int);
+    std::pair<std::vector<int>, std::vector<int>> extractPolygons(const std::string&);
 public:
     FileReader(std::string);
 };

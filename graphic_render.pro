@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     filereader.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    triangle.cpp
 
 HEADERS += \
     filereader.h \
-    mainwindow.h
+    mainwindow.h \
+    triangle.h
 
 FORMS += \
     mainwindow.ui

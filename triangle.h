@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QColor>
 
+#include "geometry.h"
+
 using namespace std;
 
 struct Color {
@@ -14,7 +16,7 @@ struct Color {
 class Triangle
 {
 public:
-    void drawTriangle(pair<int, int>, pair<int, int>, pair<int, int>, Color, QPainter&);
+    void drawTriangle(Vec3d<int>, Vec3d<int>, Vec3d<int>, Color, QPainter&, int*, int);
 };
 
 #endif // TRIANGLE_H

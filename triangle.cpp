@@ -7,34 +7,44 @@
 using namespace std;
 
 
-void Triangle::drawTriangle(pair<int, int> p0, pair<int, int> p1, pair<int, int> p2, Color color, QPainter& painter)
+void Triangle::drawTriangle(Vec3d<int> p0, Vec3d<int> p1, Vec3d<int> p2, Color color, QPainter& painter, int* zbuffer, int width)
 {
-    if (p0.second == p1.second && p0.second == p2.second) return; // bad triangles )
+    if (p0.getY() == p1.getY() && p0.getY() == p2.getY()) return; // bad triangles )
 
     // sort points
-    if (p0.second > p1.second) std::swap(p0, p1);
-    if (p0.second > p2.second) std::swap(p0, p2);
-    if (p1.second > p2.second) std::swap(p1, p2);
+    if (p0.getY() > p1.getY()) std::swap(p0, p1);
+    if (p0.getY() > p2.getY()) std::swap(p0, p2);
+    if (p1.getY() > p2.getY()) std::swap(p1, p2);
 
-    int totalHeight = p2.second - p0.second;
+    int totalHeight = p2.getY() - p0.getY();
 
     for (int i = 0; i < totalHeight; ++i)
     {
-        bool secondHalf = i > p1.second - p0.second || p1.second == p0.second;
-        int segmentHeight = secondHalf ? p2.second - p1.second : p1.second - p0.second;
+        bool secondHalf = i > p1.getY() - p0.getY() || p1.getY() == p0.getY();
+        int segmentHeight = secondHalf ? p2.getY() - p1.getY() : p1.getY() - p0.getY();
         float alpha = (float)i / totalHeight,
-            beta = (float)(i - (secondHalf ? p1.second - p0.second : 0)) / segmentHeight;
+            beta = (float)(i - (secondHalf ? p1.getY() - p0.getY() : 0)) / segmentHeight;
 
-        std::pair<int, int> A = std::make_pair(p0.first + (p2.first - p0.first) * alpha, p0.second + (p2.second - p0.second) * alpha);
-        std::pair<int, int> B = (secondHalf) ? std::make_pair(p1.first + (p2.first - p1.first) * beta, p1.second + (p2.second - p1.second) * beta) :
-                                    std::make_pair(p0.first + (p1.first - p0.first) * beta, p0.second + (p1.second - p0.second) * beta);
+        Vec3d<int> A = p0 + Vec3d<float>(p2 - p0) * alpha;
+        Vec3d<int> B = secondHalf ? p1 + Vec3d<float>(p2 - p1) * beta : p0 + Vec3d<float>(p1 - p0) * beta;
 
-        if (A.first > B.first) std::swap(A, B);
+        if (A.getX() > B.getX()) std::swap(A, B);
 
-        for (int j = A.first; j <= B.first; ++j)
+        for (int j = A.getX(); j <= B.getX(); ++j)
         {
-            painter.setPen(QColor(color.r, color.g, color.b));
-            painter.drawPoint(j, p0.second + i);
+            float phi = (B.getX() == A.getX()) ? 1. : (float)(j - A.getX()) / (float)(B.getX() - A.getX());
+            Vec3d<int> P = Vec3d<float>(A) + Vec3d<float>(B - A) * phi;
+
+            P.setX(j);
+            P.setY(p0.getY() + i);
+
+            int idx = j + (p0.getY() + i) * width;
+            if (zbuffer[idx] < P.getZ())
+            {
+                zbuffer[idx] = P.getZ();
+                painter.setPen(QColor(color.r, color.g, color.b));
+                painter.drawPoint(P.getX(), P.getY());
+            }
         }
     }
 }

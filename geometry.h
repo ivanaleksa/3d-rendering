@@ -15,6 +15,9 @@ public:
 
     Vec3d(T x_val, T y_val, T z_val) : x(x_val), y(y_val), z(z_val) {}
 
+    template<typename U>
+    Vec3d(const Vec3d<U>& other) : x(static_cast<T>(other.getX())), y(static_cast<T>(other.getY())), z(static_cast<T>(other.getZ())) {}
+
     T getX() const { return x; }
     T getY() const { return y; }
     T getZ() const { return z; }

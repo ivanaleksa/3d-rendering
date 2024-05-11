@@ -32,7 +32,7 @@ FileReader::FileReader(std::string fileName)
     in.close();
 }
 
-std::vector<float> FileReader::extractNumbers(const std::string& line, int countMissingChars)
+Vec3d<float> FileReader::extractNumbers(const std::string& line, int countMissingChars)
 {
     std::vector<float> numbers;
     std::istringstream iss(line);
@@ -48,7 +48,8 @@ std::vector<float> FileReader::extractNumbers(const std::string& line, int count
         numbers.push_back(num);
     }
 
-    return numbers;
+    Vec3d<float> res = Vec3d(numbers[0], numbers[1], numbers[2]);
+    return res;
 }
 
 std::pair<std::vector<int>, std::vector<int>> FileReader::extractPolygons(const std::string& line)
@@ -72,4 +73,14 @@ std::pair<std::vector<int>, std::vector<int>> FileReader::extractPolygons(const 
     }
 
     return std::make_pair(vertices_group, normal_group);
+}
+
+std::vector<std::vector<int>> FileReader::getPolygons()
+{
+    return polygons;
+}
+
+std::vector<Vec3d<float>> FileReader::getVertices()
+{
+    return verteces;
 }

@@ -16,6 +16,7 @@ SOURCES += \
 
 HEADERS += \
     filereader.h \
+    geometry.h \
     mainwindow.h \
     triangle.h
 

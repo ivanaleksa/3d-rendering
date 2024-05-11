@@ -45,7 +45,7 @@ void Triangle::drawTriangle(pair<int, int> p0, pair<int, int> p1, pair<int, int>
         if (endX < startX)
             std::swap(endX, startX);
 
-        for (int x = startX; x <= endX; ++x)
+        for (int x = startX; x < endX; ++x)
         {
             double t = (double)(endX - x) / (endX - startX);
             Color inter_color = interpolateColor(color1, color2, t);
@@ -70,7 +70,7 @@ void Triangle::drawTriangle(pair<int, int> p0, pair<int, int> p1, pair<int, int>
             if (endX < startX)
                 std::swap(endX, startX);
 
-            for (int x = startX; x <= endX; ++x)
+            for (int x = startX; x < endX; ++x)
             {
                 double t = (double)(endX - x) / (endX - startX);
                 Color inter_color = interpolateColor(color1, color2, t);

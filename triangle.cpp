@@ -7,77 +7,34 @@
 using namespace std;
 
 
-Color Triangle::interpolateColor(const Color& c1, const Color& c2, double t)
+void Triangle::drawTriangle(pair<int, int> p0, pair<int, int> p1, pair<int, int> p2, Color color, QPainter& painter)
 {
-    Color result;
-    result.r = c1.r * t + c2.r * (1 - t);
-    result.g = c1.g * t + c2.g * (1 - t);
-    result.b = c1.b * t + c2.b * (1 - t);
-    return result;
-}
+    if (p0.second == p1.second && p0.second == p2.second) return; // bad triangles )
 
-void Triangle::sortYPoint(pair<int, int>& p1, pair<int, int>& p2, pair<int, int>& p3)
-{
-    vector<pair<int, int>> points = {p1, p2, p3};
+    // sort points
+    if (p0.second > p1.second) std::swap(p0, p1);
+    if (p0.second > p2.second) std::swap(p0, p2);
+    if (p1.second > p2.second) std::swap(p1, p2);
 
-    sort(points.begin(), points.end(), [](const pair<int, int>& a, const pair<int, int>& b) { return a.second < b.second; });
+    int totalHeight = p2.second - p0.second;
 
-    p1 = points[0];
-    p2 = points[1];
-    p3 = points[2];
-}
-
-void Triangle::drawTriangle(pair<int, int> p0, pair<int, int> p1, pair<int, int> p2, Color color1, Color color2, QPainter& painter)
-{
-    sortYPoint(p0, p1, p2);
-
-    int delta_t = p2.second - p0.second,
-        delta_s = p1.second - p0.second;
-
-    for (int y = p0.second; y < p1.second; ++y)
+    for (int i = 0; i < totalHeight; ++i)
     {
-        double alpha = (double)(y - p0.second) / delta_t,
-            beta = (double)(y - p0.second) / delta_s;
+        bool secondHalf = i > p1.second - p0.second || p1.second == p0.second;
+        int segmentHeight = secondHalf ? p2.second - p1.second : p1.second - p0.second;
+        float alpha = (float)i / totalHeight,
+            beta = (float)(i - (secondHalf ? p1.second - p0.second : 0)) / segmentHeight;
 
-        int startX = p0.first + (p2.first - p0.first) * alpha,
-            endX = p0.first + (p1.first - p0.first) * beta;
+        std::pair<int, int> A = std::make_pair(p0.first + (p2.first - p0.first) * alpha, p0.second + (p2.second - p0.second) * alpha);
+        std::pair<int, int> B = (secondHalf) ? std::make_pair(p1.first + (p2.first - p1.first) * beta, p1.second + (p2.second - p1.second) * beta) :
+                                    std::make_pair(p0.first + (p1.first - p0.first) * beta, p0.second + (p1.second - p0.second) * beta);
 
-        if (endX < startX)
-            std::swap(endX, startX);
+        if (A.first > B.first) std::swap(A, B);
 
-        for (int x = startX; x < endX; ++x)
+        for (int j = A.first; j <= B.first; ++j)
         {
-            double t = (double)(endX - x) / (endX - startX);
-            Color inter_color = interpolateColor(color1, color2, t);
-
-            painter.setPen(QColor(inter_color.r, inter_color.g, inter_color.b));
-            painter.drawPoint(x, y);
-        }
-    }
-
-    delta_s = p2.second - p1.second;
-
-    if (delta_s != 0)
-    {
-        for (int y = p2.second; y >= p1.second; --y)
-        {
-            double alpha = (double)(y - p2.second) / delta_t,
-                beta = (double)(y - p2.second) / delta_s;
-
-            int startX = p2.first + (p2.first - p0.first) * alpha,
-                endX = p2.first + (p2.first - p1.first) * beta;
-
-            if (endX < startX)
-                std::swap(endX, startX);
-
-            for (int x = startX; x < endX; ++x)
-            {
-                double t = (double)(endX - x) / (endX - startX);
-                Color inter_color = interpolateColor(color1, color2, t);
-
-                painter.setPen(QColor(inter_color.r, inter_color.g, inter_color.b));
-                painter.drawPoint(x, y);
-            }
+            painter.setPen(QColor(color.r, color.g, color.b));
+            painter.drawPoint(j, p0.second + i);
         }
     }
 }

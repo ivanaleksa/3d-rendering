@@ -14,9 +14,7 @@ struct Color {
 class Triangle
 {
 public:
-    void drawTriangle(pair<int, int>, pair<int, int>, pair<int, int>, Color, Color, QPainter&);
-    void sortYPoint(pair<int, int>&, pair<int, int>&, pair<int, int>&);
-    Color interpolateColor(const Color&, const Color&, double);
+    void drawTriangle(pair<int, int>, pair<int, int>, pair<int, int>, Color, QPainter&);
 };
 
 #endif // TRIANGLE_H

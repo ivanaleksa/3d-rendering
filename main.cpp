@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
             Color color = {intensity * 255, intensity * 255, intensity * 255};
 
-            tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], color, color, painter);
+            tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], color, painter);
         }
     }
 

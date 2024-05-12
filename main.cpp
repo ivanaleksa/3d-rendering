@@ -16,7 +16,36 @@
 
 const int depth = 255;
 int *zbuffer = NULL;
-Vec3d<float> lightDir(0,0,-1);
+Vec3d<float> lightDir(0,0,-1), camera(0, 0, 3);
+
+
+Vec3d<float> m2v(Matrix m)
+{
+    return Vec3d<float>(m[0][0] / m[3][0], m[1][0] / m[3][0], m[2][0] / m[3][0]);
+}
+
+Matrix v2m(Vec3d<float> v)
+{
+    Matrix m(4, 1);
+    m[0][0] = v.getX();
+    m[1][0] = v.getY();
+    m[2][0] = v.getZ();
+    m[3][0] = 1.f;
+    return m;
+}
+
+Matrix viewport(int x, int y, int w, int h)
+{
+    Matrix m = Matrix::identity(4);
+    m[0][3] = x + w / 2.f;
+    m[1][3] = y + h / 2.f;
+    m[2][3] = depth / 2.f;
+
+    m[0][0] = w / 2.f;
+    m[1][1] = h / 2.f;
+    m[2][2] = depth / 2.f;
+    return m;
+}
 
 
 int main(int argc, char *argv[])
@@ -44,6 +73,10 @@ int main(int argc, char *argv[])
 
 
     // drawing
+    Matrix Projection = Matrix::identity(4);
+    Matrix ViewPort = viewport(screenSize.width() / 8, screenSize.height() / 8, screenSize.width() * 3 / 4, screenSize.height() * 3 / 4);
+    Projection[3][2] = -1.f / camera.getZ();
+
     std::vector<std::vector<int>> polygons = data.getPolygons();
     std::vector<Vec3d<float>> vertices = data.getVertices();
 
@@ -55,9 +88,7 @@ int main(int argc, char *argv[])
         for (int j = 0; j < 3; ++j)
         {
             Vec3d<float> v = vertices[triangleIndx[j]];
-            screenCoord[j] = Vec3d<int>((v.getX() + 1.) * screenSize.width() / 4.,
-                                        (v.getY() + 1.) * screenSize.width() / 4.,
-                                        (v.getZ() + 1.) * depth / 2.);
+            screenCoord[j] = m2v(ViewPort * Projection * v2m(v));
             worldCoords[j] = v;
         }
         Vec3d<float> n = (worldCoords[2] - worldCoords[0]) ^ (worldCoords[1] - worldCoords[0]);

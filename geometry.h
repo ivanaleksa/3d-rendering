@@ -50,6 +50,10 @@ public:
             );
     }
 
+    T& operator[](const int i) {
+        return i == 0 ? x : (i == 1 ? y : z);
+    }
+
     T norm() const {
         return std::sqrt(x * x + y * y + z * z);
     }

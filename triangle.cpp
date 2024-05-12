@@ -59,10 +59,13 @@ void Triangle::drawTriangle(Vec3d<int> p0, Vec3d<int> p1, Vec3d<int> p2, float i
             P.setY(p0.getY() + i);
 
             int idx = P.getX() + P.getY() * width;
+
+            if (P.getX() >= width || P.getY() >= height || P.getX() < 0 || P.getY() < 0) continue;
+
             if (idx >= 0 && idx < width * height) {
                 if (zbuffer[idx] < P.getZ()) {
                     zbuffer[idx] = P.getZ();
-                    painter.setPen(QColor(255 * ityP, 255 * ityP, 255 * ityP));
+                    painter.setPen(QColor(0 * ityP, 172 * ityP, 17 * ityP));
                     painter.drawPoint(P.getX(), P.getY());
                 }
             }

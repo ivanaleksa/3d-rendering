@@ -16,8 +16,10 @@ private:
 public:
     FileReader(std::string);
 
-    std::vector<std::vector<int>> getPolygons();
-    std::vector<Vec3d<float>> getVertices();
+    std::vector<std::vector<int>> getPolygons() { return polygons; }
+    std::vector<Vec3d<float>> getVertices() { return verteces; }
+    std::vector<Vec3d<float>> getNorms() { return vertices_normal; }
+    std::vector<std::vector<int>> getPolygonsNorms() { return polygons_normal; }
 };
 
 #endif

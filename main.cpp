@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QDebug>
+#include <vector>
 
 #include "filereader.h"
 #include "triangle.h"
@@ -15,8 +16,8 @@
 
 
 const int depth = 255;
-int *zbuffer = nullptr;
-Vec3d<float> lightDir(0,0,-1), camera(0, 0, 3);
+int* zbuffer = nullptr;
+Vec3d<float> lightDir = Vec3d<float>(1, 1, 1).normalize(), camera(0, 0, 5);
 
 
 Vec3d<float> m2v(Matrix m)
@@ -77,30 +78,33 @@ int main(int argc, char *argv[])
     Matrix ViewPort = viewport(screenSize.width() / 8, screenSize.height() / 8, screenSize.width() * 3 / 4, screenSize.height() * 3 / 4);
     Projection[3][2] = -1.f / camera.getZ();
 
-    std::vector<std::vector<int>> polygons = data.getPolygons();
-    std::vector<Vec3d<float>> vertices = data.getVertices();
+    std::vector<std::vector<int>> polygons = data.getPolygons(), polygonsNorms = data.getPolygonsNorms();
+    std::vector<Vec3d<float>> vertices = data.getVertices(), norms = data.getNorms();
 
     for (int i = 0; i < (int)polygons.size(); ++i)
     {
-        std::vector<int> triangleIndx = polygons[i];
+        std::vector<int> triangleIndx = polygons[i], normsIndx = polygonsNorms[i];
         Vec3d<int> screenCoord[3];
         Vec3d<float> worldCoords[3];
+        float intensity[3];
         for (int j = 0; j < 3; ++j)
         {
-            Vec3d<float> v = vertices[triangleIndx[j]];
+            Vec3d<float> v = vertices[triangleIndx[j]], norm = norms[normsIndx[j]];
             screenCoord[j] = m2v(ViewPort * Projection * v2m(v));
             worldCoords[j] = v;
+            intensity[j] = norm * lightDir;
         }
-        Vec3d<float> n = (worldCoords[2] - worldCoords[0]) ^ (worldCoords[1] - worldCoords[0]);
-        n.normalize();
+        tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], intensity[0], intensity[1], intensity[2], painter, zbuffer, screenSize.width(), screenSize.height());
+        // Vec3d<float> n = (worldCoords[2] - worldCoords[0]) ^ (worldCoords[1] - worldCoords[0]);
+        // n.normalize();
 
-        if (n * lightDir > 0) {
-            float intensity = n * lightDir;
+        // if (n * lightDir > 0) {
+        //     float intensity = n * lightDir;
 
-            Color color = {intensity * 255, intensity * 255, intensity * 255};
+        //     Color color = {intensity * 255, intensity * 255, intensity * 255};
 
-            tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], color, painter, zbuffer, screenSize.width());
-        }
+        //     tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], color, painter, zbuffer, screenSize.width(), screenSize.height());
+        // }
     }
 
     pixmap = pixmap.transformed(QTransform().scale(1, -1));
@@ -108,8 +112,6 @@ int main(int argc, char *argv[])
     QLabel label;
     label.setPixmap(pixmap);
     label.showFullScreen();
-
-    delete[] zbuffer;
 
     return a.exec();
 }

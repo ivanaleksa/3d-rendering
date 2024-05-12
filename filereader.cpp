@@ -74,13 +74,3 @@ std::pair<std::vector<int>, std::vector<int>> FileReader::extractPolygons(const 
 
     return std::make_pair(vertices_group, normal_group);
 }
-
-std::vector<std::vector<int>> FileReader::getPolygons()
-{
-    return polygons;
-}
-
-std::vector<Vec3d<float>> FileReader::getVertices()
-{
-    return verteces;
-}

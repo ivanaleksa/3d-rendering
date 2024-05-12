@@ -38,7 +38,7 @@ void Triangle::drawTriangle(Vec3d<int> p0, Vec3d<int> p1, Vec3d<int> p2, Color c
             P.setX(j);
             P.setY(p0.getY() + i);
 
-            int idx = j + (p0.getY() + i) * width;
+            int idx = P.getX() + P.getY() * width;
             if (zbuffer[idx] < P.getZ())
             {
                 zbuffer[idx] = P.getZ();

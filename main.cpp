@@ -15,7 +15,7 @@
 
 
 const int depth = 255;
-int *zbuffer = NULL;
+int *zbuffer = nullptr;
 Vec3d<float> lightDir(0,0,-1), camera(0, 0, 3);
 
 
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    FileReader data("1.obj");
+    FileReader data("head.obj");
 
     // initializinf of a screen
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -67,8 +67,8 @@ int main(int argc, char *argv[])
 
 
     // initializing of zbuffer
-    zbuffer = new int[screenSize.width() * screenSize.width()];
-    for (int i = 0; i < screenSize.width() * screenSize.width(); ++i)
+    zbuffer = new int[screenSize.width() * screenSize.height()];
+    for (int i = 0; i < screenSize.width() * screenSize.height(); ++i)
         zbuffer[i] = std::numeric_limits<int>::min();
 
 

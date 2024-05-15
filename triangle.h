@@ -16,7 +16,7 @@ struct Color {
 class Triangle
 {
 public:
-    void drawTriangle(Vec3d<int>, Vec3d<int>, Vec3d<int>, Color, QPainter&, int*, int);
+    void drawTriangle(Vec3d<int>, Vec3d<int>, Vec3d<int>, float, float, float, QPainter&, int*, int, int, Color);
 };
 
 #endif // TRIANGLE_H

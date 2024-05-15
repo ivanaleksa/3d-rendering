@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     filereader.cpp \
+    geometry.cpp \
     main.cpp \
     mainwindow.cpp \
     triangle.cpp

@@ -2,6 +2,7 @@
 #define GEOMETRY_H
 
 #include <cmath>
+#include <vector>
 
 
 template<typename T>
@@ -49,6 +50,10 @@ public:
             );
     }
 
+    T& operator[](const int i) {
+        return i == 0 ? x : (i == 1 ? y : z);
+    }
+
     T norm() const {
         return std::sqrt(x * x + y * y + z * z);
     }
@@ -60,6 +65,25 @@ public:
         }
         return *this;
     }
+};
+
+
+class Matrix
+{
+private:
+    std::vector<std::vector<float>> m;
+    int rows, cols;
+
+public:
+    Matrix(int r = 4, int c = 4);
+    inline int nrows();
+    inline int ncols();
+
+    static Matrix identity(int dimensions);
+    std::vector<float>& operator[](const int i);
+    Matrix operator*(const Matrix& a);
+    Matrix transpose();
+    Matrix inverse();
 };
 
 #endif // GEOMETRY_H

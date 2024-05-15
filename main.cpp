@@ -18,11 +18,11 @@
 #include "triangle.h"
 #include "geometry.h"
 
-FileReader DATA("1.obj"); // чтение файла
-float azimuth = 0.0f; // угол в горизонтальной плоскости
-float elevation = 0.0f; // угол в вертикальной плоскости
-float radius = 3.0f; // расстояние от камеры до объекта
-const int depth = 255; // глубина zbuffer
+FileReader DATA("1.obj"); // obj file reading
+float azimuth = 0.0f; // horizontal angle
+float elevation = 0.0f; // vertical angle
+float radius = 3.0f; // camera-object distance
+const int depth = 255; // depth of zbuffer
 const int minViewportSize = 100;
 const int maxViewportSize = 4000;
 Color figureColor = { 255, 255, 255 };

@@ -25,6 +25,7 @@ float radius = 3.0f; // расстояние от камеры до объект
 const int depth = 255; // глубина zbuffer
 const int minViewportSize = 100;
 const int maxViewportSize = 4000;
+Color figureColor = { 255, 255, 255 };
 
 
 int viewportWidth = 1080, viewportHeight = 1080;
@@ -32,7 +33,7 @@ int* zbuffer = nullptr;
 
 
 Vec3d<float>
-    lightDir = Vec3d<float>(1, -1, 1).normalize(),
+    lightDir = Vec3d<float>(1, 1, 3).normalize(),
     camera(1, 1, 3),
     center(0, 0, 0);
 Matrix ModelView, Projection, ViewPort;
@@ -109,12 +110,11 @@ void renderScene(QPainter &painter, const QSize &screenSize) {
         float intensity[3];
         for (int j = 0; j < 3; ++j) {
             Vec3d<float> v = vertices[triangleIndx[j]], norm = norms[normsIndx[j]];
-            // screenCoord[j] = m2v(ViewPort * Projection * ModelView * v2m(v));
             screenCoord[j] = m2v(ViewPort * ModelView * v2m(v));
             worldCoords[j] = v;
             intensity[j] = norm * lightDir;
         }
-        tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], intensity[0], intensity[1], intensity[2], painter, zbuffer, screenSize.width(), screenSize.height());
+        tr.drawTriangle(screenCoord[0], screenCoord[1], screenCoord[2], intensity[0], intensity[1], intensity[2], painter, zbuffer, screenSize.width(), screenSize.height(), figureColor);
     }
 
     delete[] zbuffer;
@@ -174,6 +174,8 @@ protected:
         QScreen *screen = QGuiApplication::primaryScreen();
         QSize screenSize = screen->size();
         ViewPort = viewport(screenSize.width() / 2 - viewportWidth / 2, screenSize.height() / 2 - viewportHeight / 2, viewportWidth, viewportHeight);
+
+        // lightDir = camera.normalize(); // change here if you want a static light
 
         update();
     }

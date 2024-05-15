@@ -7,7 +7,7 @@
 using namespace std;
 
 
-void Triangle::drawTriangle(Vec3d<int> p0, Vec3d<int> p1, Vec3d<int> p2, float ity0, float ity1, float ity2, QPainter& painter, int* zbuffer, int width, int height)
+void Triangle::drawTriangle(Vec3d<int> p0, Vec3d<int> p1, Vec3d<int> p2, float ity0, float ity1, float ity2, QPainter& painter, int* zbuffer, int width, int height, Color color)
 {
     if (p0.getY() == p1.getY() && p0.getY() == p2.getY()) return; // bad triangles )
 
@@ -65,7 +65,7 @@ void Triangle::drawTriangle(Vec3d<int> p0, Vec3d<int> p1, Vec3d<int> p2, float i
             if (idx >= 0 && idx < width * height) {
                 if (zbuffer[idx] < P.getZ()) {
                     zbuffer[idx] = P.getZ();
-                    painter.setPen(QColor(0 * ityP, 172 * ityP, 17 * ityP));
+                    painter.setPen(QColor(color.r * ityP, color.g * ityP, color.b * ityP));
                     painter.drawPoint(P.getX(), P.getY());
                 }
             }

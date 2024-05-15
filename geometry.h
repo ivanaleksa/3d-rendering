@@ -68,8 +68,6 @@ public:
 };
 
 
-const int DEFAULT_ALLOC = 4;
-
 class Matrix
 {
 private:
@@ -77,7 +75,7 @@ private:
     int rows, cols;
 
 public:
-    Matrix(int r = DEFAULT_ALLOC, int c = DEFAULT_ALLOC);
+    Matrix(int r = 4, int c = 4);
     inline int nrows();
     inline int ncols();
 
